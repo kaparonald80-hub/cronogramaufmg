@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cronograma Seriado UFMG · Etapa 1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#eef2f8;--card:#fff;--ink:#10213f;--mute:#5b6b86;--line:#d5dcea;--acc:#f2b705;--acc-ink:#10213f;--ok:#1f8a5b;--bad:#c4452f;--navy:#10213f;--navy-ink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1426;--card:#13213d;--ink:#e8eefb;--mute:#97a6c4;--line:#27395d;--navy:#1a2d52;--ok:#4cc38a;--bad:#ff8068;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1426;--card:#13213d;--ink:#e8eefb;--mute:#97a6c4;--line:#27395d;--navy:#1a2d52;--ok:#4cc38a;--bad:#ff8068;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,.big{font-family:Sora,system-ui,sans-serif;margin:0}
+main{max-width:860px;margin:0 auto;padding:16px 16px 64px}
+.hero{background:var(--navy);color:var(--navy-ink);border-radius:18px;padding:22px;display:grid;gap:14px}
+.hero h1{font-size:1.35rem;font-weight:800}
+.stats{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end}
+.big{font-size:3rem;font-weight:800;line-height:1;color:var(--acc)}
+.stats small{display:block;color:#c9d4ea;font-size:.85rem}
+.bar{height:10px;background:rgba(255,255,255,.18);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+nav{display:flex;gap:6px;margin:18px 0 12px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:5}
+nav button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:600 .95rem Sora,system-ui,sans-serif;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.week{margin:22px 0 8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.week h2{font-size:1.1rem}.week span{color:var(--mute);font-size:.9rem}
+.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.day.today{border:2px solid var(--acc)}
+.day.done{opacity:.72}
+.dh{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.date{font:700 .9rem Sora,sans-serif;min-width:92px}
+.date em{display:block;font-style:normal;color:var(--mute);font-weight:500;font-size:.8rem}
+.focus{flex:1;min-width:0;border:0;border-bottom:1px dashed var(--line);background:transparent;color:var(--ink);font:600 1rem system-ui,sans-serif;padding:4px 0}
+.pct{font-size:.8rem;color:var(--mute);white-space:nowrap}
+.task{display:flex;gap:10px;align-items:center;padding:6px 0}
+.task input[type=checkbox]{width:22px;height:22px;accent-color:var(--ok);flex:none}
+.task span{flex:1}
+.task input:checked+span{text-decoration:line-through;color:var(--mute)}
+.x{border:0;background:none;color:var(--mute);cursor:pointer;font-size:1.1rem;padding:4px 8px}
+.add{display:flex;gap:6px;margin-top:6px}
+.add input,.form input,.form select,.form textarea{flex:1;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit;min-width:0}
+.btn{padding:9px 14px;border:0;border-radius:9px;background:var(--acc);color:var(--acc-ink);font:700 .9rem Sora,sans-serif;cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px}
+.form .row{display:flex;gap:8px;flex-wrap:wrap}
+.err{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--bad);border-radius:12px;padding:12px;margin-top:10px}
+.err.ok{border-left-color:var(--ok);opacity:.75}
+.err h3{font-size:.95rem}.err p{margin:4px 0;color:var(--mute);font-size:.92rem}
+.tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:1px 10px;font-size:.78rem;margin-right:6px}
+.filters{display:flex;gap:6px;margin:12px 0 0;flex-wrap:wrap}
+.foot{display:flex;gap:8px;margin-top:26px;flex-wrap:wrap}
+.empty{color:var(--mute);text-align:center;padding:28px 0}
+[hidden]{display:none!important}
+@media (max-width:520px){.dh{flex-wrap:wrap}.focus{flex-basis:100%;order:3}.big{font-size:2.4rem}}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+  <h1>Seriado UFMG · Etapa 1 · prova em 13/12/2026</h1>
+  <div class="stats">
+    <div><div class="big" id="dias">–</div><small>dias até a prova</small></div>
+    <div><div class="big" id="pct">0%</div><small id="tarefas">tarefas concluídas</small></div>
+    <div><div class="big" id="pend">0</div><small>erros para refazer</small></div>
+  </div>
+  <div class="bar" role="progressbar" aria-label="Progresso geral"><i id="barra"></i></div>
+</section>
+
+<nav role="tablist">
+  <button role="tab" id="t-cron" aria-selected="true">Cronograma</button>
+  <button role="tab" id="t-err" aria-selected="false">Caderno de erros</button>
+  <button role="tab" id="t-pri" aria-selected="false">Prioridades</button>
+</nav>
+
+<section id="v-cron"></section>
+
+<section id="v-pri" hidden>
+  <div class="day"><h3>Peso na prova (45 questões)</h3><p>Linguagens 14 · Natureza 12 · Humanas 10 · Matemática 9, mais 1 discursiva interdisciplinar. Português e Literatura valem muito e treinam junto com todas as outras provas, por isso entram em blocos curtos e frequentes.</p></div>
+  <div class="day"><h3>Estudo pesado</h3><p><b>Matemática:</b> funções (domínio, imagem, composição, inversa, por partes), 2º grau, exponencial e log, geometria e trigonometria, razão e variação de grandezas.<br><b>Física:</b> gráficos de cinemática, MRUV, queda livre, circular, Newton com atrito e plano inclinado, fluidos.<br><b>Química:</b> mol e estequiometria, ligações, propriedades periódicas.<br><b>Biologia:</b> genética, divisão celular, metabolismo energético.<br><b>Linguagens:</b> efeitos de sentido, coesão, as 3 obras do ciclo.</p></div>
+  <div class="day"><h3>Só com questões e resumo</h3><p><b>História:</b> fontes e tempo, sociedades e poder, Américas.<br><b>Sociologia:</b> cultura, diversidade, desigualdades.<br><b>Geografia:</b> coordenadas, fusos, escalas, clima e domínios morfoclimáticos, energia.<br><b>Filosofia:</b> formas de conhecimento, lógica e argumentação, origem da Filosofia.</p></div>
+  <div class="day"><h3>Fora do plano</h3><p>Educação Física, Artes, Inglês ou Espanhol, Geografia agrária e Biologia de origem da vida e composição dos seres vivos: confie no que viu na escola e só confira o estilo nas questões da prova de 2025.</p></div>
+</section>
+<section id="v-err" hidden>
+  <div class="form">
+    <div class="row">
+      <select id="e-mat" aria-label="Matéria"><option>Matemática</option><option>Física</option><option>Química</option><option>Biologia</option><option>História</option><option>Geografia</option><option>Sociologia</option><option>Filosofia</option><option>Literatura</option><option>Interpretação</option></select>
+      <select id="e-causa" aria-label="Causa do erro"><option>Conteúdo</option><option>Atenção</option><option>Interpretação</option><option>Tempo</option><option>Chute</option></select>
+    </div>
+    <input id="e-tema" placeholder="Tema ou questão (ex.: Prova 2025, questão 12, MRUV)">
+    <textarea id="e-nota" rows="2" placeholder="O que errei e qual é a regra certa?"></textarea>
+    <button class="btn" id="e-add">Salvar erro</button>
+  </div>
+  <div class="filters" id="filtros"></div>
+  <div id="lista"></div>
+</section>
+
+<div class="foot">
+  <button class="btn ghost" id="tema">Alternar tema</button>
+  <button class="btn ghost" id="reset">Restaurar cronograma original</button>
+</div>
+<p style="color:var(--mute);font-size:.85rem">Seus dados ficam salvos neste navegador e neste aparelho.</p>
+</main>
+
+<script>
+const D=[
+["2026-11-22","Hoje: recuperação de funções, 2º grau e cinemática",[
+"Matemática: aulão de funções, domínio, imagem, composição e inversa (1h)",
+"Matemática: questões de funções, nível UFMG (1h30)",
+"Matemática: 1º e 2º graus, raízes, sinais, máximo e mínimo (1h)",
+"Física: gráficos, MRU, MRUV e queda livre, questões (1h)",
+"Caderno de erros (30min)"]],
+["2026-11-23","Dia leve: exponencial e log. Química: mol",[
+"Matemática: aulão de exponencial e log, com questões (1h30)",
+"Química: aulão de mol, massa molar e leis ponderais (1h)",
+"Caderno de erros (30min)"]],
+["2026-11-24","Física: Newton. Química: estequiometria. Matemática: geometria",[
+"Física: Newton, atrito e plano inclinado, aulão e questões (1h30)",
+"Química: questões de estequiometria (1h)",
+"Matemática: Pitágoras, relações métricas, seno, cosseno e tangente (1h30)",
+"Caderno de erros (1h)"]],
+["2026-11-25","Dia leve: razão, proporção e variação de grandezas",[
+"Matemática: razão, proporção, fatoração e produtos notáveis (1h15)",
+"Matemática: variação de grandezas e funções por partes, questões (45min)",
+"Caderno de erros (30min)"]],
+["2026-11-26","Biologia: genética. Química: ligações. Matemática mista",[
+"Biologia: aulão de Mendel, mitose, meiose e crossing over (1h)",
+"Biologia: questões de genética (1h)",
+"Química: ligações e propriedades das substâncias, questões (1h)",
+"Matemática: questões mistas de funções (1h)",
+"Caderno de erros (1h)"]],
+["2026-11-27","Biologia: metabolismo. Física: fluidos e circular. Química: periódica",[
+"Biologia: respiração, fermentação, fotossíntese, aulão e questões (2h)",
+"Física: Stevin, Pascal, Arquimedes e Torricelli, e movimento circular (1h30)",
+"Química: propriedades periódicas, modelos atômicos e radioatividade (1h)",
+"Caderno de erros (30min)"]],
+["2026-11-30","Português e Literatura: interpretação e O quinze",["Português: efeitos de sentido, coesão e variação, questões (1h)","Literatura: O quinze, personagens e contexto (1h)","Caderno de erros (30min)"]],
+["2026-12-01","Questões mistas de Exatas e Natureza. Geografia essencial",["Matemática: questões mistas, 9 questões cronometradas (1h30)","Física e Química: questões mistas (1h)","Geografia: coordenadas, fusos, escalas, clima e domínios morfoclimáticos (1h)","Caderno de erros (1h)"]],
+["2026-12-02","Humanas essenciais e obras",["História e Sociologia: sociedades e poder, cultura, desigualdades, questões (1h15)","Krenak e álbum Txai: temas e relações com as aulas (45min)","Caderno de erros (30min)"]],
+["2026-12-03","Natureza completa. Filosofia e Sociologia",["Biologia, Química e Física: questões mistas, 12 cronometradas (2h30)","Filosofia: conhecimento, lógica, argumentação, origem não ocidental (1h)","Caderno de erros (1h)"]],
+["2026-12-04","Matemática com provas anteriores. Discursiva",["Matemática: questões das provas anteriores da UFMG (2h)","Discursiva interdisciplinar: escreva 1 texto e corrija a norma-padrão (1h)","Português: coesão e efeitos de sentido (30min)","Caderno de erros (1h)"]],
+["2026-12-07","Refazer erros de Matemática, Física e Química",["Refazer erros de Matemática sem consultar (1h)","Refazer erros de Física e Química (45min)","Caderno de erros (30min)"]],
+["2026-12-08","Simulado completo cronometrado com a prova de 2025",["Simulado: 45 questões objetivas cronometradas","Questão discursiva interdisciplinar"]],
+["2026-12-09","Corrigir o simulado e classificar os erros",["Correção do simulado por área (1h30)","Caderno de erros (1h)"]],
+["2026-12-10","Reforço nos pontos mais fracos",["Reforço em Matemática e Natureza, pontos fracos do simulado (2h30)","Refazer erros de Biologia e Química (1h30)","Revisar erros de Humanas e Linguagens (1h)"]],
+["2026-12-11","Revisão leve e sono cedo",["Fórmulas, resumos e erros recorrentes (2h)","Dormir cedo"]],
+["2026-12-12","Descanso e logística",["Conferir local e horário da prova","Separar documentos e material","Descansar"]],
+["2026-12-13","Dia da prova",["Boa prova!"]]
+];
+const KEY="seriado-ufmg-e1-v4";
+const mk=()=>({days:D.map(([d,f,t,x])=>({date:d,focus:f,tasks:t.map(s=>({t:s,ok:!!x}))})),erros:[],filtro:"todos",theme:null});
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){S=null}
+if(!S||!S.days){S=mk();try{const o=JSON.parse(localStorage.getItem("seriado-ufmg-e1-v2")||localStorage.getItem("seriado-ufmg-e1")||"null");if(o){S.erros=o.erros||[];S.theme=o.theme||null}}catch(e){}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const WD=["dom","seg","ter","qua","qui","sex","sáb"];
+const pd=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const fmt=s=>{const d=pd(s);return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`};
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const hoje=iso(new Date());
+const weeks=["Hoje · recuperação (22/11)","Semana 1 · Exatas e Natureza (23–27/11)","Semana 2 · questões mistas, Humanas e Linguagens (30/11–4/12)","Semana 3 · simulado e fechamento (7–13/12)"];
+const wi=date=>{const t=pd(date),s=pd("2026-11-16");return Math.min(3,Math.floor((t-s)/(7*864e5)))};
+
+function stats(){
+  const all=S.days.flatMap(d=>d.tasks),ok=all.filter(t=>t.ok).length;
+  const p=all.length?Math.round(ok/all.length*100):0;
+  $("pct").textContent=p+"%";$("barra").style.width=p+"%";
+  $("tarefas").textContent=`${ok} de ${all.length} tarefas`;
+  const n=Math.ceil((pd("2026-12-13")-pd(hoje))/864e5);
+  $("dias").textContent=Math.max(0,n);
+  $("pend").textContent=S.erros.filter(e=>!e.ok).length;
+}
+function renderCron(){
+  let h="",last=-1;
+  S.days.forEach((d,i)=>{
+    const w=wi(d.date);
+    if(w!==last){last=w;const ds=S.days.filter(x=>wi(x.date)===w).flatMap(x=>x.tasks);
+      h+=`<div class="week"><h2>${weeks[w]}</h2><span>${ds.filter(t=>t.ok).length}/${ds.length} tarefas</span></div>`}
+    const n=d.tasks.filter(t=>t.ok).length,all=d.tasks.length&&n===d.tasks.length;
+    h+=`<article class="day${d.date===hoje?" today":""}${all?" done":""}" id="d-${d.date}">
+      <div class="dh"><div class="date">${fmt(d.date)}<em>${WD[pd(d.date).getDay()]}${d.date===hoje?" · hoje":""}</em></div>
+      <input class="focus" data-i="${i}" value="${esc(d.focus)}" aria-label="Foco do dia ${fmt(d.date)}">
+      <span class="pct">${n}/${d.tasks.length}</span></div>
+      ${d.tasks.map((t,j)=>`<div class="task"><input type="checkbox" data-i="${i}" data-j="${j}" id="c${i}-${j}" ${t.ok?"checked":""}><span>${esc(t.t)}</span><button class="x" data-i="${i}" data-j="${j}" aria-label="Remover tarefa">×</button></div>`).join("")}
+      <div class="add"><input data-add="${i}" placeholder="Nova tarefa"><button class="btn ghost" data-addb="${i}">Adicionar</button></div>
+    </article>`;
+  });
+  $("v-cron").innerHTML=h;stats();
+}
+function renderErr(){
+  const f=S.filtro;
+  $("filtros").innerHTML=["todos","pendentes","refeitos"].map(x=>`<button class="btn ${f===x?"":"ghost"}" data-f="${x}">${x[0].toUpperCase()+x.slice(1)}</button>`).join("");
+  const l=S.erros.map((e,i)=>({e,i})).filter(({e})=>f==="todos"||(f==="pendentes"?!e.ok:e.ok));
+  $("lista").innerHTML=l.length?l.map(({e,i})=>`<div class="err${e.ok?" ok":""}"><h3>${esc(e.tema||"Sem título")}</h3>
+    <div><span class="tag">${esc(e.mat)}</span><span class="tag">${esc(e.causa)}</span><span class="tag">${fmt(e.data)}</span></div>
+    ${e.nota?`<p>${esc(e.nota)}</p>`:""}
+    <button class="btn ghost" data-ok="${i}">${e.ok?"Marcar como pendente":"Refiz sem consultar"}</button>
+    <button class="btn ghost" data-del="${i}">Excluir</button></div>`).join(""):`<p class="empty">Nenhum erro por aqui. Registre os erros dos simulados e das listas para refazê-los depois.</p>`;
+  stats();
+}
+$("v-cron").addEventListener("change",e=>{const t=e.target;
+  if(t.matches("input[type=checkbox]")){S.days[t.dataset.i].tasks[t.dataset.j].ok=t.checked;save();renderCron()}
+  else if(t.matches(".focus")){S.days[t.dataset.i].focus=t.value;save()}});
+$("v-cron").addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+  if(t.classList.contains("x")){S.days[t.dataset.i].tasks.splice(t.dataset.j,1);save();renderCron()}
+  if(t.dataset.addb!==undefined){const i=t.dataset.addb,inp=document.querySelector(`[data-add="${i}"]`);
+    if(inp.value.trim()){S.days[i].tasks.push({t:inp.value.trim(),ok:false});save();renderCron()}}});
+$("v-cron").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset.add!==undefined){document.querySelector(`[data-addb="${e.target.dataset.add}"]`).click()}});
+$("e-add").onclick=()=>{const tema=$("e-tema").value.trim(),nota=$("e-nota").value.trim();
+  if(!tema&&!nota)return;
+  S.erros.unshift({mat:$("e-mat").value,causa:$("e-causa").value,tema,nota,data:hoje,ok:false});
+  $("e-tema").value="";$("e-nota").value="";save();renderErr()};
+$("v-err").addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.f){S.filtro=t.dataset.f}
+  if(t.dataset.ok!==undefined){S.erros[t.dataset.ok].ok=!S.erros[t.dataset.ok].ok}
+  if(t.dataset.del!==undefined){S.erros.splice(t.dataset.del,1)}
+  save();renderErr()});
+function tab(w){const m={c:"cron",e:"err",p:"pri"};for(const k in m){$("v-"+m[k]).hidden=k!==w;$("t-"+m[k]).setAttribute("aria-selected",k===w)}
+  if(w==="c")renderCron();if(w==="e")renderErr()}
+$("t-pri").onclick=()=>tab("p");
+$("t-cron").onclick=()=>tab("c");$("t-err").onclick=()=>tab("e");
+$("reset").onclick=()=>{if($("reset").dataset.s){const e=S.erros;S=mk();S.erros=e;save();$("reset").textContent="Restaurar cronograma original";delete $("reset").dataset.s;renderCron()}
+  else{$("reset").dataset.s=1;$("reset").textContent="Clique de novo para confirmar (os erros são mantidos)"}};
+$("tema").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  r.dataset.theme=dark?"light":"dark";S.theme=r.dataset.theme;save()};
+if(S.theme)document.documentElement.dataset.theme=S.theme;
+renderCron();
+const td=$("d-"+hoje);if(td)td.scrollIntoView({block:"center"});
+</script>
+</body>
+</html>
